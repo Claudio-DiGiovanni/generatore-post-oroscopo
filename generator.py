@@ -36,7 +36,14 @@ def generate_and_save():
         size="1024x1024"
     )
     img_url = response['data'][0]['url']
-    response1 = requests.get(img_url)
+    try:
+        response1 = requests.get(img_url)
+    except requests.exceptions.RequestException as e:
+        # Stampare un messaggio di errore
+        print("Errore di connessione: ", e)
+        # Esci dalla funzione
+        return
+
     img = Image.open(io.BytesIO(response1.content))
 
     # Genera la trascrizione dell'oroscopo
@@ -69,7 +76,13 @@ def generate_and_save():
     img_folder = "img"
     img_path = os.path.join(img_folder, img_name)
     # Salva l'immagine
-    img.save(img_path)
+    try:
+        img.save(img_path)
+    except Exception as e:
+    # Stampare un messaggio di errore
+        print("Errore durante il salvataggio dell'immagine: ", e)
+    # Esci dalla funzione
+        return
     show_image(img_path)
 
     # Genera la caption accattivante
